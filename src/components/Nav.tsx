@@ -12,6 +12,7 @@ export default function Nav() {
     { href: "/calculator", label: "Calculator", icon: "🧮" },
     { href: "/filter", label: "Filter", icon: "🎯" },
     { href: "/growth", label: "Growth", icon: "📈" },
+    { href: "/expansion", label: "Signals", icon: "📡" },
     { href: "/gentrification", label: "Gentrification", icon: "⏰" },
     { href: "/heatmap", label: "Heat Map", icon: "🗺️" },
     { href: "/alerts", label: "Alerts", icon: "🔔" },
