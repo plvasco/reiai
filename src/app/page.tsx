@@ -32,7 +32,7 @@ export default function DashboardPage() {
   };
 
   const handleSubscribe = async () => {
-    const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || "price_123";
+    const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || "price_1TmdHYGiR6EnAvzQc40cLOI0";
     try {
       const res = await fetch("/api/create-checkout", {
         method: "POST",
