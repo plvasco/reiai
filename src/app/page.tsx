@@ -61,8 +61,8 @@ export default function DashboardPage() {
       <header className="border-b border-[#1e2a45] px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-[#06b6d4]">Vasco Analytics</h1>
-            <p className="text-xs text-[#8b95a9]">Houston Real Estate Intelligence</p>
+            <h1 className="text-xl font-bold text-[#06b6d4]">📊 Dashboard</h1>
+            <p className="text-xs text-[#8b95a9]">Houston ZIP-level market data</p>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-xs px-2 py-1 rounded bg-[#1a2035] text-[#f59e0b] border border-[#f59e0b]/30">

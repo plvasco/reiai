@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Nav from "@/components/Nav";
 
 export const metadata: Metadata = {
-  title: "Houston RE Intelligence — Vasco Analytics",
-  description: "Live ZIP-level market data for Houston real estate investors. DOM, prices, yields, and trends.",
+  title: "Vasco Analytics — Houston RE Intelligence",
+  description: "Live ZIP-level market data, property analysis, and deal finding for Houston real estate investors.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased min-h-screen bg-[#0b0f1a] text-[#e2e8f0]">
+        <Nav />
+        {children}
+      </body>
     </html>
   );
 }
