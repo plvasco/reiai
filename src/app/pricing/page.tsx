@@ -1,7 +1,21 @@
 "use client";
 
+import { useState } from "react";
+
 export default function PricingPage() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const handleSubscribe = async (priceId: string) => {
+    if (!email.trim()) {
+      alert("Please enter your email first.");
+      return;
+    }
+
+    // Save email so the app knows who subscribed
+    localStorage.setItem("vasco_email", email.trim());
+
+    setLoading(true);
     try {
       const res = await fetch("/api/create-checkout", {
         method: "POST",
@@ -9,9 +23,15 @@ export default function PricingPage() {
         body: JSON.stringify({ priceId }),
       });
       const data = await res.json();
-      if (data.url) window.location.href = data.url;
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Something went wrong. Try again.");
+        setLoading(false);
+      }
     } catch {
-      window.open("https://buy.stripe.com/test_3cs4iH1pyaNKe1m000", "_blank");
+      alert("Failed to connect to checkout.");
+      setLoading(false);
     }
   };
 
@@ -53,7 +73,20 @@ export default function PricingPage() {
           <h2 className="text-lg font-bold mb-1">Pro</h2>
           <p className="text-sm text-[#8b95a9] mb-4">Full deal analysis toolkit</p>
           <div className="text-3xl font-bold mb-2">$39</div>
-          <div className="text-sm text-[#8b95a9] mb-6">per month</div>
+          <div className="text-sm text-[#8b95a9] mb-4">per month</div>
+
+          {/* Email input - required before subscribe */}
+          <div className="mb-4">
+            <label className="text-xs text-[#8b95a9] block mb-1">Email for subscription</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@email.com"
+              className="w-full bg-[#0b0f1a] border border-[#1e2a45] rounded-lg px-3 py-2.5 text-sm text-[#e2e8f0] placeholder-[#8b95a9]"
+            />
+          </div>
+
           <ul className="space-y-2 text-sm flex-1">
             <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> Everything in Free</li>
             <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> Deal calculator (cash flow, ROI, cap rate, DSCR)</li>
@@ -66,9 +99,10 @@ export default function PricingPage() {
           </ul>
           <button
             onClick={() => handleSubscribe("price_1TmdHYGiR6EnAvzQc40cLOI0")}
-            className="w-full bg-[#06b6d4] text-[#0b0f1a] font-semibold py-3 rounded-lg text-sm hover:bg-[#0891b2] transition mt-6"
+            disabled={loading || !email.trim()}
+            className="w-full bg-[#06b6d4] text-[#0b0f1a] font-semibold py-3 rounded-lg text-sm hover:bg-[#0891b2] transition disabled:opacity-50 mt-6"
           >
-            Subscribe Now
+            {loading ? "Redirecting to Stripe..." : "Subscribe Now — $39/mo"}
           </button>
         </div>
       </div>
