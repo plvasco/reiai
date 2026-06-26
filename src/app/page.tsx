@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { ZipData } from "@/lib/types";
+import { PRELIMINARY_ZIP_DATA } from "@/lib/preliminary-data";
 
 export default function DashboardPage() {
-  const [data, setData] = useState<ZipData[]>([]);
+  const [data, setData] = useState<ZipData[]>(PRELIMINARY_ZIP_DATA);
   const [loading, setLoading] = useState(true);
+  const [usingLive, setUsingLive] = useState(false);
   const [sortKey, setSortKey] = useState<keyof ZipData>("medDOM");
   const [sortAsc, setSortAsc] = useState(true);
   const [subscription, setSubscription] = useState<"free" | "paid">("free");
@@ -14,7 +16,10 @@ export default function DashboardPage() {
     fetch("/api/market-data")
       .then((r) => r.json())
       .then((d) => {
-        setData(d.data || []);
+        if (d.data && d.data.length > 0) {
+          setData(d.data);
+          setUsingLive(true);
+        }
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -76,9 +81,13 @@ export default function DashboardPage() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         {/* Live Status */}
         <div className="flex items-center gap-2 mb-6">
-          <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-          <span className="text-sm text-[#8b95a9]">Live data from RentCast API</span>
-          <span className="text-xs text-[#8b95a9] ml-auto">Updated {new Date().toLocaleDateString()}</span>
+          <span className={`w-2 h-2 rounded-full ${usingLive ? 'bg-[#10b981] animate-pulse' : 'bg-[#f59e0b]'} `} />
+          <span className="text-sm text-[#8b95a9]">
+            {usingLive ? "Live data from RentCast API" : "Preliminary data (loading live...)"}
+          </span>
+          <span className="text-xs text-[#8b95a9] ml-auto">
+            {usingLive ? `Updated ${new Date().toLocaleDateString()}` : "Snapshot: Jun 26, 2026"}
+          </span>
         </div>
 
         {/* Key Metrics */}
@@ -115,8 +124,8 @@ export default function DashboardPage() {
               className="bg-[#0b0f1a] border border-[#1e2a45] rounded px-3 py-1.5 text-xs w-40 text-[#e2e8f0] placeholder-[#8b95a9]"
             />
           </div>
-          {loading ? (
-            <div className="p-12 text-center text-[#8b95a9]">Loading live data...</div>
+          {data.length === 0 ? (
+            <div className="p-12 text-center text-[#8b95a9]">No data available</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
