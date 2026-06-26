@@ -13,6 +13,7 @@ export default function Nav() {
     { href: "/filter", label: "Filter", icon: "🎯" },
     { href: "/growth", label: "Growth", icon: "📈" },
     { href: "/expansion", label: "Signals", icon: "📡" },
+    { href: "/distressed", label: "Distressed", icon: "🎯" },
     { href: "/gentrification", label: "Gentrification", icon: "⏰" },
     { href: "/heatmap", label: "Heat Map", icon: "🗺️" },
     { href: "/alerts", label: "Alerts", icon: "🔔" },
