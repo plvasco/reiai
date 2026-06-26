@@ -10,7 +10,8 @@ export default function Nav() {
     { href: "/", label: "Dashboard", icon: "📊" },
     { href: "/lookup", label: "Property Lookup", icon: "🔍" },
     { href: "/filter", label: "Deal Filter", icon: "🎯" },
-    { href: "/gentrification", label: "Gentrification Clock", icon: "⏰" },
+    { href: "/growth", label: "Growth", icon: "📈" },
+    { href: "/gentrification", label: "Gentrification", icon: "⏰" },
     { href: "/heatmap", label: "Heat Map", icon: "🗺️" },
     { href: "/alerts", label: "Alerts", icon: "🔔" },
   ];
