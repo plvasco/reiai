@@ -32,7 +32,17 @@ export default function DashboardPage() {
   };
 
   const handleSubscribe = async () => {
-    window.open("https://buy.stripe.com/test_3cs4iH1pyaNKe1m000", "_blank");
+    try {
+      const res = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId: "price_123" }), // Will update with real price ID
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch {
+      window.open("https://buy.stripe.com/test_3cs4iH1pyaNKe1m000", "_blank");
+    }
   };
 
   const SortIcon = ({ col }: { col: keyof ZipData }) => (
