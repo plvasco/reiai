@@ -23,7 +23,28 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check localStorage for existing subscription
+    const storedEmail = localStorage.getItem("vasco_email");
+
+    // Check with the server if we have an email
+    if (storedEmail) {
+      fetch(`/api/webhook?email=${encodeURIComponent(storedEmail)}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.tier === "pro") {
+            setTier("pro");
+            setEmail(storedEmail);
+          } else {
+            // Fall back to localStorage check
+            checkLocalStorage();
+          }
+        })
+        .catch(() => checkLocalStorage());
+    } else {
+      checkLocalStorage();
+    }
+  }, []);
+
+  const checkLocalStorage = () => {
     const stored = localStorage.getItem("vasco_subscription");
     if (stored) {
       try {
@@ -36,19 +57,12 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       } catch {}
     }
     setTier("free");
-  }, []);
+  };
 
-  // Pro features that are gated
   const proFeatures = [
-    "deal-score",
-    "comps",
-    "unlimited-lookups",
-    "export-pdf",
-    "sms-alerts",
-    "portfolio-watchlist",
-    "batch-lookup",
-    "yield-column",
-    "listings-column",
+    "deal-score", "comps", "unlimited-lookups", "export-pdf",
+    "sms-alerts", "portfolio-watchlist", "batch-lookup",
+    "yield-column", "listings-column",
   ];
 
   const checkAccess = (feature: string): boolean => {
@@ -57,25 +71,25 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   };
 
   const showUpgrade = () => {
-    const subButton = document.getElementById("subscribe-button");
-    if (subButton) subButton.scrollIntoView({ behavior: "smooth" });
+    const el = document.querySelector("[href='/pricing']");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Listen for successful checkout
+  // Listen for successful Stripe checkout redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("success") === "true") {
-      // Simulate pro unlock for now — in production, verify via API
+      const email = localStorage.getItem("vasco_email") || "";
       localStorage.setItem(
         "vasco_subscription",
         JSON.stringify({
           tier: "pro",
-          email: localStorage.getItem("vasco_email") || "subscriber@email.com",
-          expires: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
+          email,
+          expires: Date.now() + 30 * 24 * 60 * 60 * 1000,
         })
       );
       setTier("pro");
-      // Clean URL
+      setEmail(email);
       window.history.replaceState({}, "", "/");
     }
   }, []);
@@ -83,7 +97,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   if (tier === "loading") {
     return (
       <div className="min-h-screen bg-[#0b0f1a] flex items-center justify-center">
-        <div className="text-[#06b6d4] text-sm">Loading...</div>
+        <div className="text-[#06b6d4] text-sm animate-pulse">Loading...</div>
       </div>
     );
   }
