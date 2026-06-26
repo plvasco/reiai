@@ -30,17 +30,16 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function ExpansionPage() {
   const [filterZip, setFilterZip] = useState("");
-  const [filterType, setFilterType] = useState<string>("all");
-  const [filterImpact, setFilterImpact] = useState<string>("all");
+  const [filterType, setFilterType] = useState("all");
+  const [filterImpact, setFilterImpact] = useState("all");
 
-  const filtered = EXPANSION_SIGNALS.filter((s) => {
+  const filtered = EXPANSION_SIGNALS.filter((s: ExpansionSignal) => {
     if (filterZip && !s.zip.includes(filterZip)) return false;
     if (filterType !== "all" && s.type !== filterType) return false;
     if (filterImpact !== "all" && s.impact !== filterImpact) return false;
     return true;
-  }).sort((a, b) => {
-    // High impact first, then under-construction before planned
-    const impactOrder = { high: 0, medium: 1, low: 2 };
+  }).sort((a: ExpansionSignal, b: ExpansionSignal) => {
+    const impactOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
     const aImp = impactOrder[a.impact] || 0;
     const bImp = impactOrder[b.impact] || 0;
     if (aImp !== bImp) return aImp - bImp;
@@ -48,8 +47,8 @@ export default function ExpansionPage() {
   });
 
   const totalInvestment = EXPANSION_SIGNALS
-    .filter((s) => s.investment)
-    .reduce((sum, s) => {
+    .filter((s: ExpansionSignal) => s.investment)
+    .reduce((sum: number, s: ExpansionSignal) => {
       const match = s.investment?.match(/[\d.]+/);
       const val = match ? parseFloat(match[0]) : 0;
       const mult = s.investment?.includes("B") ? 1000 : 1;
@@ -57,12 +56,12 @@ export default function ExpansionPage() {
     }, 0);
 
   const totalJobs = EXPANSION_SIGNALS
-    .filter((s) => s.jobs)
-    .reduce((sum, s) => sum + (s.jobs || 0), 0);
+    .filter((s: ExpansionSignal) => s.jobs)
+    .reduce((sum: number, s: ExpansionSignal) => sum + (s.jobs || 0), 0);
 
   const totalUnits = EXPANSION_SIGNALS
-    .filter((s) => s.units)
-    .reduce((sum, s) => sum + (s.units || 0), 0);
+    .filter((s: ExpansionSignal) => s.units)
+    .reduce((sum: number, s: ExpansionSignal) => sum + (s.units || 0), 0);
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-8">
@@ -127,7 +126,7 @@ export default function ExpansionPage() {
 
       {/* Signal Cards */}
       <div className="space-y-3">
-        {filtered.map((signal) => (
+        {filtered.map((signal: ExpansionSignal) => (
           <div
             key={signal.id}
             className="bg-[#111827] border border-[#1e2a45] rounded-xl p-5 hover:border-[#06b6d4]/30 transition"

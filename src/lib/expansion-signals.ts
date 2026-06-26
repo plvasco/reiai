@@ -206,7 +206,7 @@ export const EXPANSION_SIGNALS: ExpansionSignal[] = [
   },
   {
     id: "denver-harbor-1",
-    type: "permitsurge",
+    type: "permit-surge",
     title: "Denver Harbor — NHHIP Impact Zone",
     description: "Permit activity accelerating from a very low base as NHHIP construction drives interest.",
     zip: "77020",
