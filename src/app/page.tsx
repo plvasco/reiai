@@ -32,11 +32,12 @@ export default function DashboardPage() {
   };
 
   const handleSubscribe = async () => {
+    const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || "price_123";
     try {
       const res = await fetch("/api/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId: "price_123" }), // Will update with real price ID
+        body: JSON.stringify({ priceId }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
