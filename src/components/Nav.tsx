@@ -8,8 +8,9 @@ export default function Nav() {
 
   const links = [
     { href: "/", label: "Dashboard", icon: "📊" },
-    { href: "/lookup", label: "Property Lookup", icon: "🔍" },
-    { href: "/filter", label: "Deal Filter", icon: "🎯" },
+    { href: "/lookup", label: "Lookup", icon: "🔍" },
+    { href: "/calculator", label: "Calculator", icon: "🧮" },
+    { href: "/filter", label: "Filter", icon: "🎯" },
     { href: "/growth", label: "Growth", icon: "📈" },
     { href: "/gentrification", label: "Gentrification", icon: "⏰" },
     { href: "/heatmap", label: "Heat Map", icon: "🗺️" },

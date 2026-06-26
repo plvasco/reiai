@@ -68,12 +68,12 @@ export default function DashboardPage() {
             <span className="text-xs px-2 py-1 rounded bg-[#1a2035] text-[#f59e0b] border border-[#f59e0b]/30">
               {subscription === "free" ? "FREE TIER" : "PRO"}
             </span>
-            <button
-              onClick={handleSubscribe}
+            <a
+              href="/pricing"
               className="bg-[#06b6d4] text-[#0b0f1a] font-semibold px-4 py-2 rounded-lg text-sm hover:bg-[#0891b2] transition"
             >
-              Subscribe $39/mo
-            </button>
+              Upgrade $39/mo
+            </a>
           </div>
         </div>
       </header>
@@ -198,12 +198,12 @@ export default function DashboardPage() {
             <p className="text-sm text-[#8b95a9] mb-4">
               Get gross yields, listing volumes, ZIP-to-ZIP comparisons, heat maps, and exportable reports.
             </p>
-            <button
-              onClick={handleSubscribe}
+            <a
+              href="/pricing"
               className="bg-[#06b6d4] text-[#0b0f1a] font-semibold px-6 py-3 rounded-lg hover:bg-[#0891b2] transition"
             >
               Subscribe — $39/mo
-            </button>
+            </a>
           </div>
         )}
 
