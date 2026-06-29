@@ -8,6 +8,9 @@ import { SubscriptionProvider } from "@/lib/SubscriptionContext";
 export const metadata: Metadata = {
   title: "JadeBuzz Analytics — Houston RE Intelligence",
   description: "Live ZIP-level market data, property analysis, and deal finding for Houston real estate investors.",
+  other: {
+    "facebook-domain-verification": "ugdw5lg3lg81j7ot50riofr7eb8hf1",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
