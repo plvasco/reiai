@@ -16,6 +16,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="facebook-domain-verification" content="ugdw5lg3lg81j7ot50riofr7eb8hf1" />
+      </head>
       <body className="antialiased min-h-screen bg-[#0b0f1a] text-[#e2e8f0]">
         <BetaGate>
           <SubscriptionProvider>
