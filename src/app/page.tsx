@@ -155,11 +155,11 @@ export default function DashboardPage() {
                     <Th onClick={() => toggleSort("medPPS")}>$/sqft <SortIcon col="medPPS" /></Th>
                     <Th onClick={() => toggleSort("medRent")}>Med Rent <SortIcon col="medRent" /></Th>
                     <Th onClick={() => toggleSort("grossYield")}>
-                      {subscription === "free" ? "Yield (locked)" : "Gross Yield"}
+                      Gross Yield
                       <SortIcon col="grossYield" />
                     </Th>
                     <Th onClick={() => toggleSort("totalListings")}>
-                      {subscription === "free" ? "Listings (locked)" : "Listings"}
+                      Listings
                       <SortIcon col="totalListings" />
                     </Th>
                   </tr>
@@ -187,18 +187,10 @@ export default function DashboardPage() {
                         {z.medRent ? `$${z.medRent.toLocaleString()}` : "—"}
                       </td>
                       <td className="px-4 py-3 font-mono">
-                        {subscription === "free" ? (
-                          <span className="text-[#8b95a9] text-xs">🔒</span>
-                        ) : (
-                          <span className="text-[#f59e0b]">{z.grossYield}%</span>
-                        )}
+                        <span className="text-[#f59e0b]">{z.grossYield}%</span>
                       </td>
                       <td className="px-4 py-3 font-mono text-[#8b95a9]">
-                        {subscription === "free" ? (
-                          <span className="text-xs">🔒</span>
-                        ) : (
-                          z.totalListings?.toLocaleString() ?? "—"
-                        )}
+                        {z.totalListings?.toLocaleString() ?? "—"}
                       </td>
                     </tr>
                   ))}
