@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import BetaGate from "@/components/BetaGate";
+import { Analytics } from "@vercel/analytics/next";
 import { SubscriptionProvider } from "@/lib/SubscriptionContext";
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </SubscriptionProvider>
         </BetaGate>
+        <Analytics />
       </body>
     </html>
   );
