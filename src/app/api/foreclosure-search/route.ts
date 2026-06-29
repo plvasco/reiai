@@ -21,7 +21,15 @@ export async function GET(request: Request) {
   const limit = parseInt(searchParams.get("limit") || "50");
   const offset = parseInt(searchParams.get("offset") || "0");
 
-  let data = foreclosuresData as ForeclosureRecord[];
+  let rawData = foreclosuresData as unknown;
+  let data: ForeclosureRecord[] = [];
+  
+  // Handle both formats: flat array or {export_time, total_filings, filings: [...]}
+  if (Array.isArray(rawData)) {
+    data = rawData as ForeclosureRecord[];
+  } else if ((rawData as any).filings && Array.isArray((rawData as any).filings)) {
+    data = (rawData as any).filings as ForeclosureRecord[];
+  }
 
   // Apply filters
   if (county && county !== "all") {
