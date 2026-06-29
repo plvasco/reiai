@@ -22,7 +22,7 @@ export default function Nav() {
   return (
     <nav className="border-b border-[#1e2a45] bg-[#0b0f1a]/95 backdrop-blur sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-14">
-        <Link href="/" className="text-[#06b6d4] font-bold text-sm">Vasco Analytics</Link>
+        <Link href="/" className="text-[#06b6d4] font-bold text-sm">JadeBuzz Analytics</Link>
         <div className="flex gap-1 overflow-x-auto">
           {links.map((l) => (
             <Link

@@ -6,7 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SubscriptionProvider } from "@/lib/SubscriptionContext";
 
 export const metadata: Metadata = {
-  title: "Vasco Analytics — Houston RE Intelligence",
+  title: "JadeBuzz Analytics — Houston RE Intelligence",
   description: "Live ZIP-level market data, property analysis, and deal finding for Houston real estate investors.",
 };
 

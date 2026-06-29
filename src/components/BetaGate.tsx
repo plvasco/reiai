@@ -33,7 +33,7 @@ export default function BetaGate({ children }: { children: React.ReactNode }) {
         {/* Logo / Brand */}
         <div className="text-center mb-8">
           <div className="text-4xl mb-2">🏛️</div>
-          <h1 className="text-xl font-bold text-[#e2e8f0]">Vasco Analytics</h1>
+          <h1 className="text-xl font-bold text-[#e2e8f0]">JadeBuzz Analytics</h1>
           <p className="text-sm text-[#8b95a9] mt-1">
             Houston RE Intelligence — Beta Access
           </p>
@@ -76,7 +76,7 @@ export default function BetaGate({ children }: { children: React.ReactNode }) {
 
         {/* Footer */}
         <p className="text-xs text-[#5a6577] text-center mt-6">
-          Vasco Analytics — Beta v0.1 · Data updated weekly
+          JadeBuzz Analytics — Beta v0.1 · Data updated weekly
         </p>
       </div>
     </div>

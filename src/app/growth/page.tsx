@@ -139,7 +139,7 @@ export default function GrowthPage() {
       </div>
 
       <div className="mt-4 text-xs text-[#8b95a9] text-center">
-        Growth scores are a proprietary Vasco Analytics model. Not financial advice. Always conduct your own due diligence.
+        Growth scores are a proprietary JadeBuzz Analytics model. Not financial advice. Always conduct your own due diligence.
       </div>
     </main>
   );
