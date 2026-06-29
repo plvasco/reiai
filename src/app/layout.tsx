@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import BetaGate from "@/components/BetaGate";
 import { SubscriptionProvider } from "@/lib/SubscriptionContext";
 
 export const metadata: Metadata = {
@@ -12,10 +13,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="antialiased min-h-screen bg-[#0b0f1a] text-[#e2e8f0]">
-        <SubscriptionProvider>
-          <Nav />
-          {children}
-        </SubscriptionProvider>
+        <BetaGate>
+          <SubscriptionProvider>
+            <Nav />
+            {children}
+          </SubscriptionProvider>
+        </BetaGate>
       </body>
     </html>
   );
