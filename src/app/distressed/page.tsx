@@ -200,19 +200,23 @@ export default function DistressedPage() {
             Fort Bend County monthly foreclosure PDF.
           </p>
           <p>
+            <strong>ZIP medDOM:</strong> Days on Market for each property's ZIP code — fetched from RentCast market data.
+            Green (&lt;30d) = fast-selling market. Red (&gt;60d) = slow.
+          </p>
+          <p>
             <strong>Update Frequency:</strong> Weekly — every Wednesday at 9 AM CT.
           </p>
           <p>
-            <strong>Coverage:</strong> Harris County (706 filings, June 2026) and
-            Fort Bend County (96 filings, June–July 2026). Adding more counties.
+            <strong>Coverage:</strong> 836 active filings across Harris County (706) and
+            Fort Bend County (130). Adding more counties.
           </p>
           <p>
             <strong>Data Quality:</strong> Fort Bend records include owner names and
             loan amounts. Harris records need OCR extraction for those fields.
           </p>
           <p>
-            <strong>Pipeline:</strong> Automated via Hermes MCP server at
-            ~/houston-foreclosure-mcp/.
+            <strong>Pipeline:</strong> Automated via Hermes MCP server. Foreclosure data updated weekly,
+            ZIP market data from RentCast API.
           </p>
         </div>
       </div>
