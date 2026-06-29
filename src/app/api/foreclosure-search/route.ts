@@ -26,11 +26,11 @@ export async function GET(request: Request) {
   
   // Handle both formats: flat array or {export_time, total_filings, filings: [...]}
   if (Array.isArray(rawData)) {
-    data = rawData as ForeclosureRecord[];
+    data = (rawData as any[]).map(mapRecord);
   } else if ((rawData as any).filings && Array.isArray((rawData as any).filings)) {
-    data = (rawData as any).filings as ForeclosureRecord[];
+    data = (rawData as any).filings.map(mapRecord);
   }
-
+  
   // Apply filters
   if (county && county !== "all") {
     data = data.filter((r) => r.county.toLowerCase() === county.toLowerCase());
@@ -43,10 +43,10 @@ export async function GET(request: Request) {
         r.doc_id.toLowerCase().includes(z)
     );
   }
-
+  
   const total = data.length;
   const sliced = data.slice(offset, offset + limit);
-
+  
   return NextResponse.json({
     data: sliced,
     total,
@@ -54,4 +54,31 @@ export async function GET(request: Request) {
     offset,
     limit,
   });
+}
+
+function mapRecord(r: any): ForeclosureRecord {
+  return {
+    doc_id: r.doc_id || "",
+    county: r.county || (r.county_id === 1 ? "Harris" : r.county_id === 2 ? "Fort Bend" : "Unknown"),
+    sale_date: r.sale_date || "",
+    file_date: r.file_date || "",
+    property_address: r.property_address || null,
+    trustee: r.trustee || null,
+    owner_name: extractOwner(r.ocr_text),
+    loan_amount: extractAmount(r.ocr_text),
+    pages: r.pages || 0,
+    source: `${r.county || (r.county_id === 1 ? "Harris" : "Fort Bend")} County Clerk`,
+  };
+}
+
+function extractOwner(text: string | null): string | null {
+  if (!text) return null;
+  const m = text.match(/Owner:\s*(.+?)(?:\||$)/);
+  return m ? m[1].trim() : null;
+}
+
+function extractAmount(text: string | null): string | null {
+  if (!text) return null;
+  const m = text.match(/Amount:\s*\$?([0-9,]+\.?\d*)/);
+  return m ? m[1].replace(",", "") : null;
 }
