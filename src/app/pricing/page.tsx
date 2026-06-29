@@ -57,6 +57,7 @@ export default function PricingPage() {
             <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> Gentrification clock</li>
             <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> Deal filter</li>
             <li className="flex items-center gap-2"><span className="text-[#8b95a9]">✗</span> Deal calculator</li>
+            <li className="flex items-center gap-2"><span className="text-[#8b95a9]">✗</span> 💰 Foreclosure filings</li>
             <li className="flex items-center gap-2"><span className="text-[#8b95a9]">✗</span> Gross yield column</li>
             <li className="flex items-center gap-2"><span className="text-[#8b95a9]">✗</span> Export reports</li>
           </ul>
@@ -89,6 +90,7 @@ export default function PricingPage() {
 
           <ul className="space-y-2 text-sm flex-1">
             <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> Everything in Free</li>
+            <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> 💰 836+ live foreclosure filings</li>
             <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> Deal calculator (cash flow, ROI, cap rate, DSCR)</li>
             <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> Gross yield & listing columns</li>
             <li className="flex items-center gap-2"><span className="text-[#10b981]">✓</span> Property comps & deal scores</li>
@@ -111,7 +113,7 @@ export default function PricingPage() {
       <div className="mt-10 max-w-xl mx-auto space-y-3">
         <h3 className="font-semibold text-sm text-center mb-4">FAQ</h3>
         {[
-          { q: "How is the data updated?", a: "RentCast API pulls live active listing data. Updated every time you load the page." },
+          { q: "How is the data updated?", a: "ZIP market data pulled live from RentCast API. Foreclosure filings scraped from county clerk records and updated weekly every Wednesday." },
           { q: "Can I cancel anytime?", a: "Yes. Cancel from your Stripe dashboard. No contracts." },
           { q: "Is this only for Houston?", a: "Yes — currently Houston-only with 30+ ZIPs. More cities coming based on demand." },
           { q: "What makes this different from BiggerPockets?", a: "BP is a generic calculator. We give you market-level intelligence — which ZIPs are heating up, where to buy before prices spike." },

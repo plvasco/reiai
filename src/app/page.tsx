@@ -79,6 +79,23 @@ export default function DashboardPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* Foreclosure Beta Banner */}
+        <a
+          href="/distressed"
+          className="block mb-6 bg-gradient-to-r from-[#ef4444]/10 via-[#111827] to-[#06b6d4]/10 border border-[#ef4444]/30 hover:border-[#ef4444]/60 rounded-xl p-4 transition"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#ef4444]/20 text-[#ef4444] mr-2">NEW</span>
+              <span className="font-semibold text-sm">🏛️ 836 Live Foreclosure Filings</span>
+              <p className="text-xs text-[#8b95a9] mt-1">
+                Harris & Fort Bend County — owner names, loan amounts, market DOM — updated weekly
+              </p>
+            </div>
+            <span className="text-[#06b6d4] text-sm font-semibold shrink-0">View →</span>
+          </div>
+        </a>
+
         {/* Live Status */}
         <div className="flex items-center gap-2 mb-6">
           <span className={`w-2 h-2 rounded-full ${usingLive ? 'bg-[#10b981] animate-pulse' : 'bg-[#f59e0b]'} `} />
