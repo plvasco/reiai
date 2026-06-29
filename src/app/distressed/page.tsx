@@ -15,6 +15,7 @@ interface ForeclosureRecord {
   loan_amount: string | null;
   pages: number;
   source: string;
+  med_dom: number | null;
 }
 
 interface ApiResponse {
@@ -135,7 +136,7 @@ export default function DistressedPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-3 text-sm mb-3">
                 {r.owner_name && (
                   <div>
                     <div className="text-xs text-[#8b95a9]">Owner</div>
@@ -153,6 +154,12 @@ export default function DistressedPage() {
                 <div>
                   <div className="text-xs text-[#8b95a9]">Filed</div>
                   <div className="font-bold">{r.file_date || "—"}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-[#8b95a9]">ZIP DOM</div>
+                  <div className={`font-bold ${r.med_dom !== null && r.med_dom < 30 ? "text-[#10b981]" : r.med_dom !== null && r.med_dom > 60 ? "text-[#ef4444]" : ""}`}>
+                    {r.med_dom !== null ? `${r.med_dom}d` : "—"}
+                  </div>
                 </div>
                 <div>
                   <div className="text-xs text-[#8b95a9]">Doc ID</div>
