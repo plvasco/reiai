@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   },
   other: {
     "facebook-domain-verification": "ugdw5lg3lg81j7ot50riofr7eb8hf1",
-    "google-site-verification": "ADD_YOUR_GSC_CODE_HERE",
+    "google-site-verification": "X1BhC1KWgt39v4dvT0hmWPaJBVz3phDVfsBHmyIGRzQ",
   },
 };
 
@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <meta name="facebook-domain-verification" content="ugdw5lg3lg81j7ot50riofr7eb8hf1" />
-        <meta name="google-site-verification" content="ADD_YOUR_GSC_CODE_HERE" />
+        <meta name="google-site-verification" content="X1BhC1KWgt39v4dvT0hmWPaJBVz3phDVfsBHmyIGRzQ" />
       </head>
       <body className="antialiased min-h-screen bg-[#0b0f1a] text-[#e2e8f0]">
         <BetaGate>
