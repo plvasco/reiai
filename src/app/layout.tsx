@@ -43,10 +43,10 @@ export const metadata: Metadata = {
     siteName: "JadeBuzz Analytics",
     title: "JadeBuzz Analytics — Houston RE Intelligence Dashboard",
     description: "Live ZIP-level market data, property analysis, and deal finding for Houston real estate investors. Track distressed assets, analyze cap rates, and find off-market opportunities.",
-    url: "https://jadebuzz.com",
+    url: "https://www.jadebuzz.com",
     images: [
       {
-        url: "https://jadebuzz.com/og-image.png",
+        url: "https://www.jadebuzz.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "JadeBuzz Analytics — Houston RE Intelligence Dashboard",
@@ -59,14 +59,14 @@ export const metadata: Metadata = {
     creator: "@VascoPietto",
     title: "JadeBuzz Analytics — Houston RE Intelligence Dashboard",
     description: "Live ZIP-level market data, property analysis, and deal finding for Houston real estate investors.",
-    images: ["https://jadebuzz.com/og-image.png"],
+    images: ["https://www.jadebuzz.com/og-image.png"],
   },
   icons: {
     icon: "/favicon.ico",
   },
   other: {
     "facebook-domain-verification": "ugdw5lg3lg81j7ot50riofr7eb8hf1",
-    "google-site-verification": "",
+    "google-site-verification": "ADD_YOUR_GSC_CODE_HERE",
   },
 };
 
@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <meta name="facebook-domain-verification" content="ugdw5lg3lg81j7ot50riofr7eb8hf1" />
-        <meta name="google-site-verification" content="" />
+        <meta name="google-site-verification" content="ADD_YOUR_GSC_CODE_HERE" />
       </head>
       <body className="antialiased min-h-screen bg-[#0b0f1a] text-[#e2e8f0]">
         <BetaGate>
