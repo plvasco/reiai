@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "@/components/Nav";
-import BetaGate from "@/components/BetaGate";
 import { Analytics } from "@vercel/analytics/next";
 import { SubscriptionProvider } from "@/lib/SubscriptionContext";
+import BetaGate from "@/components/BetaGate";
 
 export const metadata: Metadata = {
   title: {
