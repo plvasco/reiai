@@ -22,7 +22,33 @@ export async function POST(req: NextRequest) {
 
     feedbacks.push(entry);
 
-    // Log it (Vercel retains logs)
+    // Send instant email notification via SES
+    try {
+      const { SESClient, SendEmailCommand } = await import("@aws-sdk/client-ses");
+      const client = new SESClient({
+        region: "us-east-1",
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+        },
+      });
+      const typeEmoji: Record<string, string> = { bug: "🐛", feature: "💡", data: "📊", general: "💬" };
+      await client.send(new SendEmailCommand({
+        Source: "pietto.vasco@gmail.com",
+        Destination: { ToAddresses: ["pietto.vasco@gmail.com"] },
+        Message: {
+          Subject: { Data: `💬 New Feedback: ${entry.name} — ${typeEmoji[entry.type] || "💬"} ${entry.type}` },
+          Body: { Text: { Data: [
+            `New feedback from ${entry.name} (${entry.email})`,
+            ``,
+            `Type: ${entry.type}`,
+            `Message: ${entry.message}`,
+            `Time: ${entry.timestamp}`,
+          ].join("\n") } },
+        },
+      }));
+    } catch {}
+
     console.log("[FEEDBACK]", entry);
 
     return NextResponse.json({ success: true });
