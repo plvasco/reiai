@@ -134,5 +134,82 @@ export default function BetaGate({ children }: { children: React.ReactNode }) {
         </p>
       </div>
     </div>
+
+    {/* SEO Body Content — Indexable, keyword-rich */}
+    <div className="bg-[#0b0f1a] border-t border-[#1e2a45] py-16 px-4">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-xl font-bold text-[#e2e8f0] text-center mb-8">
+          Houston Real Estate Investing Dashboard
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-10">
+          <div className="bg-[#111827] border border-[#1e2a45] rounded-xl p-5">
+            <h3 className="font-semibold text-[#06b6d4] text-sm mb-2">📊 ZIP Market Intelligence</h3>
+            <p className="text-xs text-[#8b95a9] leading-relaxed">
+              Track 30+ Houston ZIP codes by median days on market, median price, price per sq ft, 
+              median rent, gross yield, and active listings. Sort, filter, and compare submarkets 
+              to find the best investment opportunities in Katy, Sugar Land, Pearland, The Woodlands, 
+              and inner-loop Houston.
+            </p>
+          </div>
+          <div className="bg-[#111827] border border-[#1e2a45] rounded-xl p-5">
+            <h3 className="font-semibold text-[#06b6d4] text-sm mb-2">🏛️ Live Foreclosure Filings</h3>
+            <p className="text-xs text-[#8b95a9] leading-relaxed">
+              Access 836+ live foreclosure filings across Harris County and Fort Bend County. 
+              Filter by ZIP code, view owner names, loan amounts, and estimated market values. 
+              Updated weekly from county clerk records — catch distressed deals before they hit the MLS.
+            </p>
+          </div>
+          <div className="bg-[#111827] border border-[#1e2a45] rounded-xl p-5">
+            <h3 className="font-semibold text-[#06b6d4] text-sm mb-2">🧮 Deal Analysis Calculator</h3>
+            <p className="text-xs text-[#8b95a9] leading-relaxed">
+              Run the numbers on any Houston property. Calculate cap rates, cash-on-cash returns, 
+              DSCR, pro forma cash flow, and BRRRR potential. Pre-populated with local market 
+              data — no more guessing expenses from national averages.
+            </p>
+          </div>
+          <div className="bg-[#111827] border border-[#1e2a45] rounded-xl p-5">
+            <h3 className="font-semibold text-[#06b6d4] text-sm mb-2">📈 Growth & Gentrification Signals</h3>
+            <p className="text-xs text-[#8b95a9] leading-relaxed">
+              Identify which Houston submarkets are heating up before prices reflect it. 
+              Our growth potential scores and gentrification clock surface neighborhoods with 
+              improving demographics, new infrastructure, and rising rents — so you can buy 
+              before the spike, not after.
+            </p>
+          </div>
+        </div>
+
+        {/* Comparison Section */}
+        <div className="bg-[#111827] border border-[#1e2a45] rounded-xl p-5 mb-6">
+          <h3 className="font-semibold text-[#e2e8f0] text-sm mb-3">Built for Houston — Unlike the Others</h3>
+          <div className="text-xs text-[#8b95a9] space-y-2">
+            <p>PropStream and DealMachine are built for national markets. Texas is a non-disclosure state — sale prices aren&apos;t public record, so their automated valuations are unreliable here.</p>
+            <p>JadeBuzz gives you Houston-specific data: MUD tax calculations, parcel-level flood risk, community-verified comps, and deed restriction awareness that no national tool provides.</p>
+            <p>If you&apos;re investing in Houston, use a tool built for Houston.</p>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div className="space-y-3">
+          <h3 className="font-semibold text-sm text-center text-[#e2e8f0] mb-4">Frequently Asked Questions</h3>
+          {[
+            { q: "How is the data updated?", a: "ZIP market data is pulled live from the RentCast API. Foreclosure filings are scraped from Harris County and Fort Bend County clerk records, updated weekly every Wednesday." },
+            { q: "What makes this different from BiggerPockets or PropStream?", a: "BiggerPockets is a generic calculator. PropStream is national. JadeBuzz is Houston-specific — we surface MUD taxes, flood risk, and community-verified comps that no national tool provides." },
+            { q: "Who is this for?", a: "Houston fix-and-flip investors, buy-and-hold landlords, wholesalers, and small multifamily investors who need accurate local data without paying for national tools that don't work well in Texas." },
+            { q: "Can I cancel anytime?", a: "Yes. Cancel from your Stripe dashboard. No contracts, no lock-in." },
+          ].map((faq, i) => (
+            <details key={i} className="bg-[#111827] border border-[#1e2a45] rounded-lg">
+              <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-[#e2e8f0]">{faq.q}</summary>
+              <p className="px-4 pb-3 text-sm text-[#8b95a9]">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <p className="text-xs text-[#5a6577] text-center mt-10">
+          JadeBuzz Analytics — Beta v0.1 · Data updated weekly · Houston, TX
+        </p>
+      </div>
+    </div>
   );
 }

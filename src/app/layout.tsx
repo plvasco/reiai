@@ -76,6 +76,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="facebook-domain-verification" content="ugdw5lg3lg81j7ot50riofr7eb8hf1" />
         <meta name="google-site-verification" content="X1BhC1KWgt39v4dvT0hmWPaJBVz3phDVfsBHmyIGRzQ" />
+        <link rel="canonical" href="https://www.jadebuzz.com" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "JadeBuzz Analytics",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "Web",
+              "description": "Houston residential real estate investing dashboard. Live ZIP-level market data, foreclosure filings, deal analysis with cap rates, cash flow, and DSCR calculations. Built for Texas real estate investors.",
+              "offers": {
+                "@type": "Offer",
+                "price": "39",
+                "priceCurrency": "USD",
+                "description": "Pro monthly subscription"
+              },
+              "author": {
+                "@type": "Organization",
+                "name": "JadeBuzz Analytics",
+                "url": "https://www.jadebuzz.com"
+              },
+              "keywords": "Houston real estate investing, REI dashboard, Houston foreclosure data, multifamily comps Houston, Texas real estate investment tools"
+            }),
+          }}
+        />
       </head>
       <body className="antialiased min-h-screen bg-[#0b0f1a] text-[#e2e8f0]">
         <BetaGate>
