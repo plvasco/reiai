@@ -13,7 +13,7 @@ export default function BetaGate({ children }: { children: React.ReactNode }) {
     const authed = sessionStorage.getItem("jadebuzz_access");
 
     // Public pages that bypass the gate
-    const publicPaths = ["/pricing", "/privacy", "/terms", "/deletion"];
+    const publicPaths = ["/pricing", "/privacy", "/terms", "/deletion", "/offers"];
     const isPublic = publicPaths.includes(window.location.pathname);
 
     if (authed === "true" || isPublic) setStep("dashboard");
@@ -45,6 +45,7 @@ export default function BetaGate({ children }: { children: React.ReactNode }) {
   if (step === "dashboard") return <>{children}</>;
 
   return (
+    <>
     <div className="min-h-screen bg-[#0b0f1a] flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         {/* Hero */}
@@ -76,12 +77,12 @@ export default function BetaGate({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Email Capture */}
-        <div className="bg-[#111827] border border-[#1e2a45] rounded-xl p-6">
+        <div className="bg-[#111827] border border-[#1e2a45] rounded-xl p-6 mb-6">
           <h2 className="font-semibold text-[#e2e8f0] mb-1">
             Get Free Access
           </h2>
           <p className="text-xs text-[#8b95a9] mb-5">
-            Enter your email to start evaluating Houston deals immediately.
+            Enter your email to unlock the full dashboard + get a free sample lead report.
           </p>
 
           <form onSubmit={handleGetAccess} className="space-y-3">
@@ -111,6 +112,40 @@ export default function BetaGate({ children }: { children: React.ReactNode }) {
 
           <p className="text-xs text-[#5a6577] text-center mt-4">
             No spam. Unsubscribe anytime.
+          </p>
+        </div>
+
+        {/* Sample Leads Preview — visible to everyone */}
+        <div className="bg-[#111827] border border-[#1e2a45] rounded-xl p-5 mb-6">
+          <h3 className="font-semibold text-[#06b6d4] text-sm mb-3">
+            🔥 Sample: 77020 Denver Harbor — Top 5 Hot Leads
+          </h3>
+          <div className="space-y-2 text-xs">
+            {[
+              ["613 HARBOR ST", "$39K", "1938", "OOS-CA", "TIEKEN CHARLES"],
+              ["2311 GAGNE ST", "$69K", "1940", "OOS-CA", "VELOCITY COMMERCIAL"],
+              ["847 WOOLWORTH ST", "$60K", "1940", "TX", "CURRENT OWNER"],
+              ["1213 CAPRON ST", "$54K", "1930", "OOS-TX", "53 5TH WARD INV"],
+              ["1912 GRANGER ST", "$54K", "1920", "TX", "THORNTON DONALD"],
+            ].map(([addr, val, yr, flag, owner], i) => (
+              <div key={i} className="flex items-center justify-between bg-[#0b0f1a] rounded-lg px-3 py-2 border border-[#1e2a45]">
+                <div>
+                  <span className="text-[#e2e8f0] font-medium">{addr}</span>
+                  <span className="text-[#64748b] ml-2">{yr} · {owner}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[#06b6d4] font-semibold">{val}</span>
+                  {flag.includes("OOS") && <span className="badge badge-oos text-[10px] px-2 py-0.5">🏁</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-[#5a6577] mt-3">
+            +20 more leads in the full report ·{" "}
+            <a href="https://houston-re-report.s3.us-east-1.amazonaws.com/leads-db/sample/77020_lead_report.html" 
+               className="text-[#06b6d4] hover:underline" target="_blank">
+              View Full Sample →
+            </a>
           </p>
         </div>
 
@@ -211,5 +246,6 @@ export default function BetaGate({ children }: { children: React.ReactNode }) {
         </p>
       </div>
     </div>
+    </>
   );
 }
