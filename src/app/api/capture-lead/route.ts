@@ -123,6 +123,17 @@ export async function POST(req: NextRequest) {
     const persisted = await persistLeadToS3(sellerLead);
     console.log(`[LEAD PERSIST] ${persisted ? "OK" : "FAILED"} — ${sellerLead.address}`);
 
+    // --- Return persistence status so we can verify end-to-end ---
+    // (also useful for the front-end to know if intake worked)
+    const result = NextResponse.json({
+      success: true,
+      persisted,
+      lead_id: sellerLead.captured_at,
+    });
+    if (!persisted) {
+      result.headers.set("x-lead-persisted", "false");
+    }
+
     // Send notification to you via AWS SES
     try {
       const client = new SESClient({
@@ -184,7 +195,7 @@ export async function POST(req: NextRequest) {
       console.error("[SES ERROR]", sesError);
     }
 
-    return NextResponse.json({ success: true });
+    return result;
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
