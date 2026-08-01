@@ -1,5 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+// --- Our S3-backed seller-leads store (one JSON object per lead) ---
+const LEADS_BUCKET = "houston-re-report";
+const LEADS_PREFIX = "seller-leads/";
+
+const AWS_CFG = () => ({
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+  },
+});
+
+/**
+ * Persist a seller lead as a JSON object in S3.
+ * Uses a unique key per lead (timestamp + random) to avoid
+ * read-then-write race conditions on a shared append log.
+ */
+async function persistLeadToS3(lead: Record<string, unknown>): Promise<boolean> {
+  try {
+    const s3 = new S3Client(AWS_CFG());
+    const ts = lead["captured_at"] as string;
+    const rand = Math.random().toString(36).slice(2, 8);
+    const Key = `${LEADS_PREFIX}${ts.replace(/[^0-9T-Z:-]/g, "").replace(/[:.]/g, "-")}_${rand}.json`;
+    await s3.send(new PutObjectCommand({
+      Bucket: LEADS_BUCKET,
+      Key,
+      Body: JSON.stringify(lead, null, 2),
+      ContentType: "application/json",
+    }));
+    return true;
+  } catch (e: any) {
+    console.error("[S3 persist lead]", e?.message);
+    return false;
+  }
+}
 
 const LEAD_REPORT_URL = "https://houston-re-report.s3.us-east-1.amazonaws.com/leads-db/sample/77020_lead_report.html";
 const LEAD_REPORT_PDF = "https://houston-re-report.s3.us-east-1.amazonaws.com/leads-db/sample/77020_lead_report.html";
@@ -58,11 +95,7 @@ const WELCOME_EMAIL_HTML = (name: string) => `
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, name, source } = await req.json();
-
-    if (!email) {
-      return NextResponse.json({ error: "Email required" }, { status: 400 });
-    }
+    const { email, name, source, phone, address, timeline } = await req.json();
 
     const displayName = name?.trim() || "Houston investor";
     const now = new Date().toLocaleString("en-US", {
@@ -70,6 +103,25 @@ export async function POST(req: NextRequest) {
       dateStyle: "full",
       timeStyle: "short",
     });
+    const iso = new Date().toISOString();
+
+    // --- PERSIST the full seller lead to S3 (the vital fix) ---
+    // Capture name, phone, address, timeline — the data the page submits
+    // but the old handler silently dropped.
+    const sellerLead: Record<string, unknown> = {
+      type: "seller_lead",
+      captured_at: iso,
+      captured_at_ct: now,
+      name: displayName,
+      phone: phone?.trim() || "",
+      address: address?.trim() || "",
+      timeline: timeline || "",
+      source: source || "offers-page",
+      status: "new",
+      screened: false,
+    };
+    const persisted = await persistLeadToS3(sellerLead);
+    console.log(`[LEAD PERSIST] ${persisted ? "OK" : "FAILED"} — ${sellerLead.address}`);
 
     // Send notification to you via AWS SES
     try {
@@ -81,24 +133,27 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Notification to you (SES sandbox — can only send to verified emails)
+      // Notification to you — a NEW SELLER LEAD (Product 4)
       await client.send(new SendEmailCommand({
         Source: "pietto.vasco@gmail.com",
         Destination: { ToAddresses: ["pietto.vasco@gmail.com"] },
         Message: {
-          Subject: { Data: `🏛️ New JadeBuzz Signup — ${displayName}` },
+          Subject: { Data: `🏠 NEW SELLER LEAD — ${sellerLead.address}` },
           Body: {
             Text: {
               Data: [
-                `New dashboard signup!`,
+                `A seller submitted a cash-offer request!`,
                 ``,
-                `Name: ${displayName}`,
-                `Email: ${email}`,
-                `Source: ${source || "landing-page"}`,
-                `Time: ${now}`,
-                `Total: TODO`,
+                `Name: ${sellerLead.name}`,
+                `Phone: ${sellerLead.phone}`,
+                `Address: ${sellerLead.address}`,
+                `Timeline: ${sellerLead.timeline || "n/a"}`,
+                `Source: ${sellerLead.source}`,
+                `Time: ${sellerLead.captured_at_ct}`,
                 ``,
-                `— JadeBuzz Analytics`,
+                `S3 persisted: ${persisted ? "YES" : "NO — CHECK"}`,
+                ``,
+                `— JadeBuzz Analytics (Product 4 seller lead)`,
               ].join("\n"),
             },
           },
