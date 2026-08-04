@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { screenSellerAddress } from "@/lib/screenSeller";
 
 // --- Our S3-backed seller-leads store (one JSON object per lead) ---
 const LEADS_BUCKET = "houston-re-report";
@@ -123,11 +124,31 @@ export async function POST(req: NextRequest) {
     const persisted = await persistLeadToS3(sellerLead);
     console.log(`[LEAD PERSIST] ${persisted ? "OK" : "FAILED"} — ${sellerLead.address}`);
 
-    // --- Return persistence status so we can verify end-to-end ---
-    // (also useful for the front-end to know if intake worked)
+    // --- 2. Distress screening: score the seller's address (HOT/WARM/COLD) ---
+    // Query our 229K-parcel DB via the deal API, tag the lead tier.
+    const screening = await screenSellerAddress(sellerLead.address as string);
+
+    // Attach screening to the lead record & persist the enriched lead.
+    const enrichedLead = {
+      ...sellerLead,
+      screened: screening.screened,
+      score: screening.score,
+      tier: screening.tier,
+      parcel: screening.parcel ?? undefined,
+      screen_reason: screening.reason,
+    };
+    if (screening.screened) {
+      await persistLeadToS3({ ...enrichedLead, kind: "screened" });
+    }
+
+    // --- Return persistence status + screening so we can verify end-to-end ---
     const result = NextResponse.json({
       success: true,
       persisted,
+      screening: {
+        tier: screening.tier,
+        score: screening.score,
+      },
       lead_id: sellerLead.captured_at,
     });
     if (!persisted) {
@@ -159,6 +180,12 @@ export async function POST(req: NextRequest) {
                 `Phone: ${sellerLead.phone}`,
                 `Address: ${sellerLead.address}`,
                 `Timeline: ${sellerLead.timeline || "n/a"}`,
+                ``,
+                `DISTRESS SCREEN: ${screening.tier}${screening.score != null ? ` (${screening.score}/100)` : ""}`,
+                `Parcel owner: ${screening.parcel?.owner || "n/a"}`,
+                `Market value: ${screening.parcel?.market_value != null ? "$" + screening.parcel.market_value.toLocaleString() : "n/a"}`,
+                `Out-of-state owner: ${screening.parcel?.out_of_state ? "YES" : "no"}`,
+                ``,
                 `Source: ${sellerLead.source}`,
                 `Time: ${sellerLead.captured_at_ct}`,
                 ``,
