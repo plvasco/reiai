@@ -128,7 +128,8 @@ export async function POST(req: NextRequest) {
     // Query our 229K-parcel DB via the deal API, tag the lead tier.
     const screening = await screenSellerAddress(sellerLead.address as string);
 
-    // Attach screening to the lead record & persist the enriched lead.
+    // Attach screening result to the lead record. Always persist the
+    // screening status (incl. reason) so we can diagnose & rank.
     const enrichedLead = {
       ...sellerLead,
       screened: screening.screened,
@@ -137,9 +138,7 @@ export async function POST(req: NextRequest) {
       parcel: screening.parcel ?? undefined,
       screen_reason: screening.reason,
     };
-    if (screening.screened) {
-      await persistLeadToS3({ ...enrichedLead, kind: "screened" });
-    }
+    await persistLeadToS3({ ...enrichedLead, kind: "screened" });
 
     // --- Return persistence status + screening so we can verify end-to-end ---
     const result = NextResponse.json({
