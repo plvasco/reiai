@@ -96,7 +96,7 @@ const WELCOME_EMAIL_HTML = (name: string) => `
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, name, source, phone, address, timeline } = await req.json();
+    const { email, name, source, phone, address, timeline, consent, consent_at } = await req.json();
 
     const displayName = name?.trim() || "Houston investor";
     const now = new Date().toLocaleString("en-US", {
@@ -120,6 +120,8 @@ export async function POST(req: NextRequest) {
       source: source || "offers-page",
       status: "new",
       screened: false,
+      consent: !!consent,
+      consent_at: consent_at || null,
     };
     const persisted = await persistLeadToS3(sellerLead);
     console.log(`[LEAD PERSIST] ${persisted ? "OK" : "FAILED"} — ${sellerLead.address}`);

@@ -12,6 +12,7 @@ export default function OffersPage() {
   const [timeline, setTimeline] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   // Meta Pixel base code (loaded once)
   const pixelScript = `
@@ -25,7 +26,7 @@ export default function OffersPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim() || !phone.trim() || !address.trim()) return;
+    if (!name.trim() || !phone.trim() || !address.trim() || !consent) return;
     setLoading(true);
 
     const ok = (() => {
@@ -40,6 +41,8 @@ export default function OffersPage() {
             phone: phone.trim(),
             address: address.trim(),
             timeline,
+            consent: true,
+            consent_at: new Date().toISOString(),
           }),
         }).then((r) => r.ok);
       } catch {
@@ -145,9 +148,29 @@ export default function OffersPage() {
               </select>
             </div>
 
+            {/* TCPA Consent */}
+            <div>
+              <label className="flex items-start gap-2 text-xs text-[#8b95a9] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  required
+                  className="mt-0.5 h-4 w-4 rounded border-[#1e2a45] bg-[#0b0f1a] accent-[#06b6d4] shrink-0"
+                />
+                <span>
+                  By providing my phone number, I consent to receive calls and SMS
+                  texts — including via autodialed technology — from JadeBuzz about
+                  my property. Msg &amp; data rates may apply. Reply{" "}
+                  <strong>STOP</strong> to opt out. I have read the{" "}
+                  <a href="https://jadebuzz.com/privacy" className="text-[#06b6d4] underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+                </span>
+              </label>
+            </div>
+
             <button
               type="submit"
-              disabled={loading || !name.trim() || !phone.trim() || !address.trim()}
+              disabled={loading || !name.trim() || !phone.trim() || !address.trim() || !consent}
               className="w-full bg-[#06b6d4] text-[#0b0f1a] font-semibold px-4 py-3 rounded-lg text-sm hover:bg-[#0891b2] transition disabled:opacity-50"
             >
               {loading ? "Sending..." : "Get My Cash Offer"}
