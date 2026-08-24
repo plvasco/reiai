@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Script from "next/script";
+
+const FB_PIXEL_ID = "1491096296115165";
 
 export default function OffersPage() {
   const [name, setName] = useState("");
@@ -10,28 +13,48 @@ export default function OffersPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Meta Pixel base code (loaded once)
+  const pixelScript = `
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '${FB_PIXEL_ID}');
+    fbq('track', 'PageView');`;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !address.trim()) return;
     setLoading(true);
 
-    try {
-      await fetch("/api/capture-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          email: `${phone.trim()}@sms.capture`,
-          source: "offers-page",
-          phone: phone.trim(),
-          address: address.trim(),
-          timeline,
-        }),
-      });
-    } catch {}
+    const ok = (() => {
+      try {
+        return fetch("/api/capture-lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.trim(),
+            email: `${phone.trim()}@sms.capture`,
+            source: "offers-page",
+            phone: phone.trim(),
+            address: address.trim(),
+            timeline,
+          }),
+        }).then((r) => r.ok);
+      } catch {
+        return Promise.resolve(false);
+      }
+    })();
 
     setSubmitted(true);
     setLoading(false);
+
+    // Fire the SubmitLead conversion event after the lead is captured
+    const captured = await ok.catch(() => false);
+    if (captured && typeof (window as any).fbq === "function") {
+      (window as any).fbq("track", "SubmitLead", { currency: "USD", value: 0 });
+    }
   }
 
   if (submitted) {
@@ -54,6 +77,8 @@ export default function OffersPage() {
 
   return (
     <div className="min-h-screen bg-[#0b0f1a] flex items-center justify-center px-4">
+      {/* Meta Pixel load */}
+      <Script id="meta-pixel" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: pixelScript }} />
       <div className="max-w-md w-full">
         {/* Brand */}
         <div className="text-center mb-8">
