@@ -42,6 +42,52 @@ async function persistLeadToS3(lead: Record<string, unknown>): Promise<boolean> 
 const LEAD_REPORT_URL = "https://houston-re-report.s3.us-east-1.amazonaws.com/leads-db/sample/77020_lead_report.html";
 const LEAD_REPORT_PDF = "https://houston-re-report.s3.us-east-1.amazonaws.com/leads-db/sample/77020_lead_report.html";
 
+/**
+ * Send an SMS confirmation to the seller once they've submitted the form
+ * with TCPA consent. Uses Twilio. Credentials read from env vars so they
+ * stay out of the codebase. Only fires when consent was given.
+ */
+async function sendSellerSms(lead: Record<string, unknown>): Promise<boolean> {
+  const twilioSid = process.env.TWILIO_ACCOUNT_SID || "";
+  const twilioAuth = process.env.TWILIO_AUTH_TOKEN || "";
+  const twilioFrom = process.env.TWILIO_FROM_NUMBER || "";
+  const toNumber = (lead["phone"] as string) || "";
+  if (!twilioSid || !twilioAuth || !twilioFrom || !toNumber || !lead["consent"]) {
+    return false; // not configured, no consent, or no phone
+  }
+  try {
+    const firstName = String((lead["name"] as string) || "").split(" ")[0] || "there";
+    const address = String((lead["address"] as string) || "your property");
+    const body = `JadeBuzz: Thanks, ${firstName}! We received your cash-offer request for ${address}. A JadeBuzz specialist will reach out shortly to discuss your offer. Reply STOP to opt out, HELP for help. Msg&data rates apply.`;
+    const params = new URLSearchParams({
+      To: toNumber,
+      From: twilioFrom,
+      Body: body,
+    });
+    const auth = Buffer.from(`${twilioSid}:${twilioAuth}`).toString("base64");
+    const res = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: params.toString(),
+      }
+    );
+    if (!res.ok) {
+      console.error("[SMS SEND]", res.status, await res.text());
+      return false;
+    }
+    console.log(`[SMS SENT] to ${toNumber}`);
+    return true;
+  } catch (e: any) {
+    console.error("[SMS ERROR]", e?.message || e);
+    return false;
+  }
+}
+
 const WELCOME_EMAIL_HTML = (name: string) => `
 <!DOCTYPE html>
 <html>
@@ -154,6 +200,12 @@ export async function POST(req: NextRequest) {
     });
     if (!persisted) {
       result.headers.set("x-lead-persisted", "false");
+    }
+
+    // Send an SMS confirmation to the seller (auto-text on submit, only if consent given)
+    if (sellerLead.consent) {
+      const smsOk = await sendSellerSms({ ...sellerLead, ...enrichedLead });
+      console.log(`[SMS AUTO-TEXT] ${smsOk ? "sent" : "not sent"} — ${sellerLead.phone}`);
     }
 
     // Send notification to you via AWS SES
